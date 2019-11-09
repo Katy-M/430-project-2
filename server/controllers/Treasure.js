@@ -13,6 +13,8 @@ const inventoryPage = (req, res) => {
   });
 };
 
+const appPage = (req, res) => res.render('app');
+
 // Make a new Treasure object for the current player
 const makeTreasure = (req, res) => {
   if (!req.body.name) {
@@ -56,3 +58,4 @@ const getTreasure = (request, response) => {
 module.exports.inventoryPage = inventoryPage;
 module.exports.makeTreasure = makeTreasure;
 module.exports.getTreasure = getTreasure;
+module.exports.appPage = appPage;

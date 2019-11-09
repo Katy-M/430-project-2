@@ -7,6 +7,9 @@ const router = (app) => {
   app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);
   app.post('/signup', mid.requiresSecure, mid.requiresLogout, controllers.Account.signup);
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
+  app.get('/app', mid.requiresLogin, controllers.Treasure.appPage);
+  app.get('/inventory', mid.requiresLogin, controllers.Treasure.inventoryPage);
+  app.post('/addNewTreasure', mid.requiresLogin, controllers.Treasure.makeTreasure);
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };
 
