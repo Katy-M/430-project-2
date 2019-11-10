@@ -13,7 +13,9 @@ const inventoryPage = (req, res) => {
   });
 };
 
-const appPage = (req, res) => res.render('app');
+const appPage = (req, res) => {
+  return res.render('app', { csrfToken: req.csrfToken() });
+};
 
 // Make a new Treasure object for the current player
 const makeTreasure = (req, res) => {
@@ -29,7 +31,7 @@ const makeTreasure = (req, res) => {
   const newTreasure = new Treasure.TreasureModel(treasureData);
   const treasurePromise = newTreasure.save();
 
-  treasurePromise.then(() => res.json({ redirect: '/maker' }));
+  treasurePromise.then(() => res.json({ redirect: '/addNewTreasure' }));
   treasurePromise.catch((err) => {
     console.log(err);
     if (err.code === 11000) {

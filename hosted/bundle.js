@@ -1,76 +1,167 @@
+"use strict";
 'use strict';
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }(); // React components for handling the game client and window
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _react = require('react');
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+// React components for handling the game client and window
 
 // A clickable div that may or may not contain treasure. Will later
 // contain the player and can be navigated to/from using buttons
-// Uses state hook to keep track of component state and change it dynamically
-var GridTile = function GridTile(props) {
-    // stores the NAME of the treasure on the tile. Empty == ""
-    var _useState$props$treas = _slicedToArray(_react.useState[props.treasure], 2),
-        hasTreasure = _useState$props$treas[0],
-        setHasTreasure = _useState$props$treas[1];
-    // const [hasPlayer, setHasPlayer] = useState[props.hasPlayer];
+// Uses state to keep track of component state and change it dynamically
+var GridTile = function (_React$Component) {
+    _inherits(GridTile, _React$Component);
 
-    var handleClick = function handleClick(e) {
-        e.preventDefault();
+    function GridTile(props) {
+        _classCallCheck(this, GridTile);
 
-        if (hasTreasure == '') {
-            alert("No treasure here!");
+        var _this = _possibleConstructorReturn(this, (GridTile.__proto__ || Object.getPrototypeOf(GridTile)).call(this, props));
+
+        _this.state = {
+            hasTreasure: props.treasure // stores the NAME of the treasure on the tile. Empty == ""
+            // hasPlayer: props.hasPlayer
+        };
+
+        _this.handleClick = _this.handleClick.bind(_this);
+        return _this;
+    }
+
+    _createClass(GridTile, [{
+        key: 'handleClick',
+        value: function handleClick(e) {
+            e.preventDefault();
+
+            if (this.state.hasTreasure == '') {
+                alert("No treasure here!");
+                return false;
+            }
+
+            // if there is treasure, tell server to create an instance of it for the player's inventory
+            sendAjax('POST', '/addNewTreasure', this.state.hasTreasure, alert(this.state.hasTreasure + ' found and added to inventory!'));
+
+            // remove treasure from the grid tile
+            this.setState({ hasTreasure: '' });
             return false;
         }
+    }, {
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'div',
+                { className: 'gridTile col-lg-4 col-md-4 col-sm-4 col-4', onClick: this.handleClick },
+                React.createElement(
+                    'p',
+                    { className: 'label' },
+                    this.state.hasTreasure
+                )
+            );
+        }
+    }]);
 
-        // if there is treasure, tell server to create an instance of it for the player's inventory
-        sendAjax('POST', '/addNewTreasure', hasTreasure, function () {
-            alert(hasTreasure + ' found and added to inventory!');
-        });
+    return GridTile;
+}(React.Component);
 
-        // remove treasure from the grid tile
-        setHasTreasure('');
-        return false;
-    };
-    return React.createElement(
-        'div',
-        { className: 'gridTile', onClick: handleClick },
-        React.createElement(
-            'p',
-            { className: 'label' },
-            hasTreasure
-        )
-    );
-};
+;
 
 // A traversable collection of grid tiles
 // The chance of treasure is procedurally generated in an array with corresponding indicies
 // for each tile on the grid. Default value is passed into the props of each tile
-var Grid = function Grid() {
+var Grid = function Grid(props) {
     // Contains the names of treasure in a given grid tile
-    var treasArray = ['Holy Grail', '', '', '', '', 'Gold Ore', '', 'Sands of Time Dagger', ''];
+    var treasArray = ['Holy Grail', '', '', '', '', 'Gold Ore', '', 'Dagger of Time', ''];
 
     return React.createElement(
         'div',
-        { className: 'gridContainer' },
-        React.createElement(GridTile, { treasure: treasArray[0] }),
-        React.createElement(GridTile, { treasure: treasArray[1] }),
-        React.createElement(GridTile, { treasure: treasArray[2] }),
-        React.createElement(GridTile, { treasure: treasArray[3] }),
-        React.createElement(GridTile, { treasure: treasArray[4] }),
-        React.createElement(GridTile, { treasure: treasArray[5] }),
-        React.createElement(GridTile, { treasure: treasArray[6] }),
-        React.createElement(GridTile, { treasure: treasArray[7] }),
-        React.createElement(GridTile, { treasure: treasArray[8] })
+        { className: 'gridContainer container' },
+        React.createElement(
+            'div',
+            { className: 'row content-justify-center' },
+            React.createElement(GridTile, { treasure: treasArray[0], csrf: props.csrf }),
+            React.createElement(GridTile, { treasure: treasArray[1], csrf: props.csrf }),
+            React.createElement(GridTile, { treasure: treasArray[2], csrf: props.csrf })
+        ),
+        React.createElement(
+            'div',
+            { className: 'row content-justify-center' },
+            React.createElement(GridTile, { treasure: treasArray[3], csrf: props.csrf }),
+            React.createElement(GridTile, { treasure: treasArray[4], csrf: props.csrf }),
+            React.createElement(GridTile, { treasure: treasArray[5], csrf: props.csrf })
+        ),
+        React.createElement(
+            'div',
+            { className: 'row content-justify-center' },
+            React.createElement(GridTile, { treasure: treasArray[6], csrf: props.csrf }),
+            React.createElement(GridTile, { treasure: treasArray[7], csrf: props.csrf }),
+            React.createElement(GridTile, { treasure: treasArray[8], csrf: props.csrf })
+        )
     );
 };
 
-var setup = function setup() {
-    ReactDOM.render(React.createElement(Grid, null), document.querySelector('#app'));
+var Inventory = function Inventory(props) {
+    if (props.items.length === 0) {
+        return React.createElement(
+            'div',
+            { className: 'itemList' },
+            React.createElement(
+                'h3',
+                { className: 'emptyInventory' },
+                'You have nothing in your inventory yet.'
+            )
+        );
+    }
+
+    var itemTiles = props.items.map(function (item) {
+        return React.createElement(
+            'div',
+            { key: item.id, className: 'inventoryItem' },
+            React.createElement(
+                'h3',
+                { className: 'itemName' },
+                'Name: ',
+                item.name
+            ),
+            React.createElement(
+                'h3',
+                { className: 'itemValue' },
+                'Value: ',
+                item.value
+            )
+        );
+    });
+
+    return React.createElement(
+        'div',
+        { className: 'itemList' },
+        itemTiles
+    );
+};
+
+var loadInventoryFromServer = function loadInventoryFromServer() {
+    sendAjax('GET', '/getInventory', null, function (data) {
+        ReactDOM.render(React.createElement(Inventory, { items: data.treasure }), document.querySelector("#inventory"));
+    });
+};
+
+var setup = function setup(csrfToken) {
+    ReactDOM.render(React.createElement(Grid, { csrf: csrfToken }), document.querySelector('#app'));
+    ReactDOM.render(React.createElement(Inventory, { items: [] }), document.querySelector("#inventory"));
+
+    loadInventoryFromServer();
+};
+
+var getToken = function getToken() {
+    sendAjax('GET', '/getToken', null, function (result) {
+        setup(result.csrfToken);
+    });
 };
 
 $(document).ready(function () {
-    setup();
+    getToken();
 });
 "use strict";
 

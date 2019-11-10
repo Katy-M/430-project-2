@@ -1,0 +1,7 @@
+.gridContainer {
+}
+.gridTile {
+    background-color: sandybrown;
+    border: 1px solid black;
+    height: 8rem;
+}
