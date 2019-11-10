@@ -38,19 +38,31 @@ var LoginWindow = function LoginWindow(props) {
             className: "mainForm"
         },
         React.createElement(
-            "label",
-            { htmlFor: "username" },
-            "Username: "
+            "div",
+            { className: "form-group container" },
+            React.createElement(
+                "label",
+                { htmlFor: "username" },
+                "Username: "
+            ),
+            React.createElement("input", { id: "user", className: "form-control", type: "text", name: "username", placeholder: "username" })
         ),
-        React.createElement("input", { id: "user", type: "text", name: "username", placeholder: "username" }),
         React.createElement(
-            "label",
-            { htmlFor: "pass" },
-            "Password: "
+            "div",
+            { className: "form-group container" },
+            React.createElement(
+                "label",
+                { htmlFor: "pass" },
+                "Password: "
+            ),
+            React.createElement("input", { id: "pass", className: "form-control", type: "password", name: "pass", placeholder: "password" })
         ),
-        React.createElement("input", { id: "pass", type: "password", name: "pass", placeholder: "password" }),
-        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-        React.createElement("input", { className: "formSubmit", type: "submit", value: "Sign in" })
+        React.createElement(
+            "div",
+            { className: "form-group container" },
+            React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+            React.createElement("input", { className: "formSubmit btn btn-primary", type: "submit", value: "Sign in" })
+        )
     );
 };
 
@@ -65,25 +77,41 @@ var SignupWindow = function SignupWindow(props) {
             className: "mainForm"
         },
         React.createElement(
-            "label",
-            { htmlFor: "username" },
-            "Username: "
+            "div",
+            { className: "form-group container" },
+            React.createElement(
+                "label",
+                { htmlFor: "username" },
+                "Username: "
+            ),
+            React.createElement("input", { id: "user", className: "form-control", type: "text", name: "username", placeholder: "username" })
         ),
-        React.createElement("input", { id: "user", type: "text", name: "username", placeholder: "username" }),
         React.createElement(
-            "label",
-            { htmlFor: "pass" },
-            "Password: "
+            "div",
+            { className: "form-group container" },
+            React.createElement(
+                "label",
+                { htmlFor: "pass" },
+                "Password: "
+            ),
+            React.createElement("input", { id: "pass", className: "form-control", type: "password", name: "pass", placeholder: "password" })
         ),
-        React.createElement("input", { id: "pass", type: "password", name: "pass", placeholder: "password" }),
         React.createElement(
-            "label",
-            { htmlFor: "pass2" },
-            "Password: "
+            "div",
+            { className: "form-group container" },
+            React.createElement(
+                "label",
+                { htmlFor: "pass2" },
+                "Password: "
+            ),
+            React.createElement("input", { id: "pass2", className: "form-control", type: "password", name: "pass2", placeholder: "retype password" })
         ),
-        React.createElement("input", { id: "pass2", type: "password", name: "pass2", placeholder: "retype password" }),
-        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-        React.createElement("input", { className: "formSubmit", type: "submit", value: "Sign up" })
+        React.createElement(
+            "div",
+            { className: "form-group container" },
+            React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+            React.createElement("input", { className: "formSubmit btn btn-primary", type: "submit", value: "Sign up" })
+        )
     );
 };
 

@@ -34,14 +34,20 @@ const LoginWindow = (props) => {
             method="POST"
             className="mainForm"
         >
-            <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="username"/>
+            <div className="form-group container">
+                <label htmlFor="username">Username: </label>
+                <input id="user" className="form-control" type="text" name="username" placeholder="username"/>
+            </div>
 
-            <label htmlFor="pass">Password: </label>
-            <input id="pass" type="password" name="pass" placeholder="password"/>
+            <div className="form-group container">
+                <label htmlFor="pass">Password: </label>
+                <input id="pass" className="form-control" type="password" name="pass" placeholder="password"/>
+            </div>
 
-            <input type="hidden" name="_csrf" value={props.csrf}/>
-            <input className="formSubmit" type="submit" value="Sign in"/>
+            <div className="form-group container">
+                <input type="hidden" name="_csrf" value={props.csrf}/>
+                <input className="formSubmit btn btn-primary" type="submit" value="Sign in"/>
+            </div>
         </form>
     );
 };
@@ -55,17 +61,25 @@ const SignupWindow = (props) => {
             method="POST"
             className="mainForm"
         >
-            <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="username"/>
+            <div className="form-group container">
+                <label htmlFor="username">Username: </label>
+                <input id="user" className="form-control" type="text" name="username" placeholder="username"/>
+            </div>
 
-            <label htmlFor="pass">Password: </label>
-            <input id="pass" type="password" name="pass" placeholder="password"/>
+            <div className="form-group container">
+                <label htmlFor="pass">Password: </label>
+                <input id="pass" className="form-control" type="password" name="pass" placeholder="password"/>
+            </div>
 
-            <label htmlFor="pass2">Password: </label>
-            <input id="pass2" type="password" name="pass2" placeholder="retype password"/>
+            <div className="form-group container">
+                <label htmlFor="pass2">Password: </label>
+                <input id="pass2" className="form-control" type="password" name="pass2" placeholder="retype password"/>
+            </div>
 
-            <input type="hidden" name="_csrf" value={props.csrf}/>
-            <input className="formSubmit" type="submit" value="Sign up"/>
+            <div className="form-group container">
+                <input type="hidden" name="_csrf" value={props.csrf}/>
+                <input className="formSubmit btn btn-primary" type="submit" value="Sign up"/>
+            </div>
         </form>
     );
 };

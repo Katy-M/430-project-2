@@ -42,7 +42,7 @@ var GridTile = function (_React$Component) {
             }
 
             // if there is treasure, tell server to create an instance of it for the player's inventory
-            sendAjax('POST', '/addNewTreasure', this.state.hasTreasure, alert(this.state.hasTreasure + ' found and added to inventory!'));
+            sendAjax('POST', '/makeTreasure', this.state.hasTreasure, alert(this.state.hasTreasure + ' found and added to inventory!'));
 
             // remove treasure from the grid tile
             this.setState({ hasTreasure: '' });
@@ -72,7 +72,8 @@ var GridTile = function (_React$Component) {
 // The chance of treasure is procedurally generated in an array with corresponding indicies
 // for each tile on the grid. Default value is passed into the props of each tile
 var Grid = function Grid(props) {
-    // Contains the names of treasure in a given grid tile
+    // Contains the names of treasure in a given grid tile. Hardcoded for now
+    // Issues - refreshing the page adds these back in. Need to pull in from server?
     var treasArray = ['Holy Grail', '', '', '', '', 'Gold Ore', '', 'Dagger of Time', ''];
 
     return React.createElement(
@@ -109,7 +110,7 @@ var Inventory = function Inventory(props) {
             { className: 'itemList' },
             React.createElement(
                 'h3',
-                { className: 'emptyInventory' },
+                null,
                 'You have nothing in your inventory yet.'
             )
         );
@@ -118,7 +119,7 @@ var Inventory = function Inventory(props) {
     var itemTiles = props.items.map(function (item) {
         return React.createElement(
             'div',
-            { key: item.id, className: 'inventoryItem' },
+            { key: item.name, className: 'inventoryItem' },
             React.createElement(
                 'h3',
                 { className: 'itemName' },
@@ -142,7 +143,7 @@ var Inventory = function Inventory(props) {
 };
 
 var loadInventoryFromServer = function loadInventoryFromServer() {
-    sendAjax('GET', '/getInventory', null, function (data) {
+    sendAjax('GET', '/getTreasure', null, function (data) {
         ReactDOM.render(React.createElement(Inventory, { items: data.treasure }), document.querySelector("#inventory"));
     });
 };

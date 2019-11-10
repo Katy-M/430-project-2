@@ -25,7 +25,7 @@ class GridTile extends React.Component {
         // if there is treasure, tell server to create an instance of it for the player's inventory
         sendAjax(
             'POST',
-            '/addNewTreasure',
+            '/makeTreasure',
             this.state.hasTreasure,
             alert(`${this.state.hasTreasure} found and added to inventory!`)
         );
@@ -48,7 +48,8 @@ class GridTile extends React.Component {
 // The chance of treasure is procedurally generated in an array with corresponding indicies
 // for each tile on the grid. Default value is passed into the props of each tile
 const Grid = (props) => {
-    // Contains the names of treasure in a given grid tile
+    // Contains the names of treasure in a given grid tile. Hardcoded for now
+    // Issues - refreshing the page adds these back in. Need to pull in from server?
     const treasArray = [
         'Holy Grail', '', '',
         '', '', 'Gold Ore',
@@ -82,14 +83,14 @@ const Inventory = (props) => {
     if(props.items.length === 0) {
         return (
             <div className="itemList">
-                <h3 className="emptyInventory">You have nothing in your inventory yet.</h3>
+                <h3>You have nothing in your inventory yet.</h3>
             </div>
         );
     }
 
     const itemTiles = props.items.map((item) => {
         return (
-            <div key={item.id} className="inventoryItem">
+            <div key={item.name} className="inventoryItem">
                 <h3 className="itemName">Name: {item.name}</h3>
                 <h3 className="itemValue">Value: {item.value}</h3>            
             </div>
@@ -104,7 +105,7 @@ const Inventory = (props) => {
 };
 
 const loadInventoryFromServer = () => {
-    sendAjax('GET', '/getInventory', null, (data) => {
+    sendAjax('GET', '/getTreasure', null, (data) => {
         ReactDOM.render(
             <Inventory items={data.treasure} />, document.querySelector("#inventory")
         );

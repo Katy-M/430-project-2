@@ -9,8 +9,8 @@ const router = (app) => {
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
   app.get('/app', mid.requiresLogin, controllers.Treasure.appPage);
   app.get('/inventory', mid.requiresLogin, controllers.Treasure.inventoryPage);
-  app.post('/addNewTreasure', mid.requiresLogin, controllers.Treasure.makeTreasure);
-  app.get('getInventory', mid.requiresLogin, controllers.Treasure.getTreasure);
+  app.post('/makeTreasure', mid.requiresLogin, controllers.Treasure.makeTreasure);
+  app.get('/getTreasure', mid.requiresLogin, controllers.Treasure.getTreasure);
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };
 

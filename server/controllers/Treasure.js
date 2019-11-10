@@ -31,7 +31,7 @@ const makeTreasure = (req, res) => {
   const newTreasure = new Treasure.TreasureModel(treasureData);
   const treasurePromise = newTreasure.save();
 
-  treasurePromise.then(() => res.json({ redirect: '/addNewTreasure' }));
+  treasurePromise.then(() => res.json({ redirect: 'makeTreasure' }));
   treasurePromise.catch((err) => {
     console.log(err);
     if (err.code === 11000) {

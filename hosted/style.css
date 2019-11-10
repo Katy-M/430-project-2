@@ -1,7 +1,16 @@
-.gridContainer {
-}
 .gridTile {
     background-color: sandybrown;
     border: 1px solid black;
     height: 8rem;
+}
+
+nav {
+    background-color: gray;
+}
+.navlink a{
+    color: white;
+}
+
+.loginForm, .signupForm {
+
 }
