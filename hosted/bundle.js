@@ -114,7 +114,7 @@ var Inventory = function Inventory(props) {
             'div',
             { className: 'itemList' },
             React.createElement(
-                'h3',
+                'h4',
                 null,
                 'You have nothing in your inventory yet.'
             )
@@ -124,18 +124,22 @@ var Inventory = function Inventory(props) {
     var itemTiles = props.items.map(function (item) {
         return React.createElement(
             'div',
-            { key: item.name, className: 'inventoryItem' },
+            { className: 'container itemList' },
             React.createElement(
-                'h3',
-                { className: 'itemName' },
-                'Name: ',
-                item.name
-            ),
-            React.createElement(
-                'h3',
-                { className: 'itemValue' },
-                'Value: ',
-                item.value
+                'div',
+                { key: item.name, className: 'inventoryItem row justify-content-center text-center' },
+                React.createElement(
+                    'h4',
+                    { className: 'itemName col-lg-4 col-md-5 col-sm-6 col-6' },
+                    'Name: ',
+                    item.name
+                ),
+                React.createElement(
+                    'h4',
+                    { className: 'itemValue col-lg-4 col-md-5 col-sm-6 col-6' },
+                    'Value: ',
+                    item.value
+                )
             )
         );
     });

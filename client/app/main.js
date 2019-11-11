@@ -88,16 +88,18 @@ const Inventory = (props) => {
     if(props.items.length === 0) {
         return (
             <div className="itemList">
-                <h3>You have nothing in your inventory yet.</h3>
+                <h4>You have nothing in your inventory yet.</h4>
             </div>
         );
     }
 
     const itemTiles = props.items.map((item) => {
         return (
-            <div key={item.name} className="inventoryItem">
-                <h3 className="itemName">Name: {item.name}</h3>
-                <h3 className="itemValue">Value: {item.value}</h3>            
+            <div className="container itemList">
+                <div key={item.name} className="inventoryItem row justify-content-center text-center">
+                    <h4 className="itemName col-lg-4 col-md-5 col-sm-6 col-6">Name: {item.name}</h4>
+                    <h4 className="itemValue col-lg-4 col-md-5 col-sm-6 col-6">Value: {item.value}</h4>            
+                </div>
             </div>
         );
     });
