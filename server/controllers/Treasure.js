@@ -22,7 +22,7 @@ const makeTreasure = (req, res) => {
   }
   const treasureData = {
     name: req.body.name,
-    value: 100, // static for now
+    value: req.body.value,
     player: req.session.account._id,
   };
 

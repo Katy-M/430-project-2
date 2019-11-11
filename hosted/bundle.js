@@ -23,8 +23,9 @@ var GridTile = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (GridTile.__proto__ || Object.getPrototypeOf(GridTile)).call(this, props));
 
         _this.state = {
-            hasTreasure: props.treasure // stores the NAME of the treasure on the tile. Empty == ""
+            hasTreasure: props.treasure, // stores the NAME of the treasure on the tile. Empty == ""
             // hasPlayer: props.hasPlayer
+            _csrf: props.csrf
         };
 
         _this.handleClick = _this.handleClick.bind(_this);
@@ -42,7 +43,11 @@ var GridTile = function (_React$Component) {
             }
 
             // if there is treasure, tell server to create an instance of it for the player's inventory
-            sendAjax('POST', '/makeTreasure', this.state.hasTreasure, alert(this.state.hasTreasure + ' found and added to inventory!'));
+            sendAjax('POST', '/makeTreasure', {
+                _csrf: this.state._csrf,
+                name: this.state.hasTreasure.name,
+                value: this.state.hasTreasure.value
+            }, alert(this.state.hasTreasure.name + ' found and added to inventory!'));
 
             // remove treasure from the grid tile
             this.setState({ hasTreasure: '' });
@@ -57,7 +62,7 @@ var GridTile = function (_React$Component) {
                 React.createElement(
                     'p',
                     { className: 'label' },
-                    this.state.hasTreasure
+                    this.state.hasTreasure.name
                 )
             );
         }
@@ -74,7 +79,7 @@ var GridTile = function (_React$Component) {
 var Grid = function Grid(props) {
     // Contains the names of treasure in a given grid tile. Hardcoded for now
     // Issues - refreshing the page adds these back in. Need to pull in from server?
-    var treasArray = ['Holy Grail', '', '', '', '', 'Gold Ore', '', 'Dagger of Time', ''];
+    var treasArray = [{ name: 'Holy Grail', value: 1000 }, '', '', '', '', { name: 'Gold Ore', value: 50 }, '', { name: 'Dagger of Time', value: 500 }, ''];
 
     return React.createElement(
         'div',

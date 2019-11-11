@@ -9,6 +9,7 @@ class GridTile extends React.Component {
         this.state = {
             hasTreasure: props.treasure, // stores the NAME of the treasure on the tile. Empty == ""
             // hasPlayer: props.hasPlayer
+            _csrf: props.csrf,
         };
 
         this.handleClick = this.handleClick.bind(this);
@@ -26,8 +27,12 @@ class GridTile extends React.Component {
         sendAjax(
             'POST',
             '/makeTreasure',
-            this.state.hasTreasure,
-            alert(`${this.state.hasTreasure} found and added to inventory!`)
+            {
+                _csrf: this.state._csrf,
+                name: this.state.hasTreasure.name,
+                value: this.state.hasTreasure.value,
+            },
+            alert(`${this.state.hasTreasure.name} found and added to inventory!`)
         );
 
         // remove treasure from the grid tile
@@ -38,7 +43,7 @@ class GridTile extends React.Component {
     render() {
         return (
             <div className="gridTile col-lg-4 col-md-4 col-sm-4 col-4" onClick={this.handleClick}>
-                <p className="label">{this.state.hasTreasure}</p>
+                <p className="label">{this.state.hasTreasure.name}</p>
             </div>
         );
     }
@@ -51,9 +56,9 @@ const Grid = (props) => {
     // Contains the names of treasure in a given grid tile. Hardcoded for now
     // Issues - refreshing the page adds these back in. Need to pull in from server?
     const treasArray = [
-        'Holy Grail', '', '',
-        '', '', 'Gold Ore',
-        '', 'Dagger of Time', '',
+        {name:'Holy Grail', value:1000}, '', '',
+        '', '', {name:'Gold Ore', value:50},
+        '', {name:'Dagger of Time', value:500}, '',
     ];
 
     return(

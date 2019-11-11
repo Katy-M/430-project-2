@@ -20,7 +20,7 @@ const TreasureSchema = new mongoose.Schema({
     type: Number,
     required: true,
     min: 0,
-    max: 500,
+    max: 1000,
   },
     // For the inventory
   player: {
