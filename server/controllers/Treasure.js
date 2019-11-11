@@ -13,9 +13,7 @@ const inventoryPage = (req, res) => {
   });
 };
 
-const appPage = (req, res) => {
-  return res.render('app', { csrfToken: req.csrfToken() });
-};
+const appPage = (req, res) => res.render('app', { csrfToken: req.csrfToken() });
 
 // Make a new Treasure object for the current player
 const makeTreasure = (req, res) => {
