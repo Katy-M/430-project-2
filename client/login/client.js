@@ -36,12 +36,12 @@ const LoginWindow = (props) => {
         >
             <div className="form-group container">
                 <label htmlFor="username">Username: </label>
-                <input id="user" className="form-control" type="text" name="username" placeholder="username"/>
+                <input id="user" className="form-control" type="text" name="username" placeholder="Username"/>
             </div>
 
             <div className="form-group container">
                 <label htmlFor="pass">Password: </label>
-                <input id="pass" className="form-control" type="password" name="pass" placeholder="password"/>
+                <input id="pass" className="form-control" type="password" name="pass" placeholder="Password"/>
             </div>
 
             <div className="form-group container">
@@ -63,17 +63,16 @@ const SignupWindow = (props) => {
         >
             <div className="form-group container">
                 <label htmlFor="username">Username: </label>
-                <input id="user" className="form-control" type="text" name="username" placeholder="username"/>
+                <input id="user" className="form-control" type="text" name="username" placeholder="Username"/>
             </div>
 
             <div className="form-group container">
                 <label htmlFor="pass">Password: </label>
-                <input id="pass" className="form-control" type="password" name="pass" placeholder="password"/>
+                <input id="pass" className="form-control" type="password" name="pass" placeholder="Password"/>
             </div>
 
             <div className="form-group container">
-                <label htmlFor="pass2">Password: </label>
-                <input id="pass2" className="form-control" type="password" name="pass2" placeholder="retype password"/>
+                <input id="pass2" className="form-control" type="password" name="pass2" placeholder="Retype password"/>
             </div>
 
             <div className="form-group container">
@@ -84,16 +83,31 @@ const SignupWindow = (props) => {
     );
 };
 
+const Title = (props) => {
+    return(
+        <div>
+            <h1 className="text-center">Welcome to Treasure Snatcher!</h1>
+            <h2 className="text-center">{props.text}</h2>
+        </div>
+    );
+};
+
 const createLoginWindow = (csrf) => {
     ReactDOM.render(
-        <LoginWindow csrf={csrf} />,
+        <div>
+            <Title text = "Login" />
+            <LoginWindow csrf={csrf} />
+        </div>,
         document.querySelector("#content")
     );
 };
 
 const createSignupWindow = (csrf) => {
     ReactDOM.render(
-        <SignupWindow csrf={csrf} />,
+        <div>
+            <Title text = "Sign Up" />
+            <SignupWindow csrf={csrf} />
+        </div>,
         document.querySelector("#content")
     );
 };

@@ -53,32 +53,25 @@ class GridTile extends React.Component {
 // The chance of treasure is procedurally generated in an array with corresponding indicies
 // for each tile on the grid. Default value is passed into the props of each tile
 const Grid = (props) => {
-    // Contains the names of treasure in a given grid tile. Hardcoded for now
-    // Issues - refreshing the page adds these back in. Need to pull in from server?
-    const treasArray = [
-        {name:'Holy Grail', value:1000}, '', '',
-        '', '', {name:'Gold Ore', value:50},
-        '', {name:'Dagger of Time', value:500}, '',
-    ];
 
     return(
         <div className="gridContainer container">
             <div className="row content-justify-center">
-                <GridTile treasure={treasArray[0]} csrf={props.csrf} />
-                <GridTile treasure={treasArray[1]} csrf={props.csrf} />
-                <GridTile treasure={treasArray[2]} csrf={props.csrf} />
+                <GridTile treasure={props.treasArray[0]} csrf={props.csrf} />
+                <GridTile treasure={props.treasArray[1]} csrf={props.csrf} />
+                <GridTile treasure={props.treasArray[2]} csrf={props.csrf} />
             </div>
 
             <div className="row content-justify-center">
-                <GridTile treasure={treasArray[3]} csrf={props.csrf} />
-                <GridTile treasure={treasArray[4]} csrf={props.csrf} />
-                <GridTile treasure={treasArray[5]} csrf={props.csrf} />
+                <GridTile treasure={props.treasArray[3]} csrf={props.csrf} />
+                <GridTile treasure={props.treasArray[4]} csrf={props.csrf} />
+                <GridTile treasure={props.treasArray[5]} csrf={props.csrf} />
             </div>
 
             <div className="row content-justify-center">
-                <GridTile treasure={treasArray[6]} csrf={props.csrf} />
-                <GridTile treasure={treasArray[7]} csrf={props.csrf} />
-                <GridTile treasure={treasArray[8]} csrf={props.csrf} />
+                <GridTile treasure={props.treasArray[6]} csrf={props.csrf} />
+                <GridTile treasure={props.treasArray[7]} csrf={props.csrf} />
+                <GridTile treasure={props.treasArray[8]} csrf={props.csrf} />
             </div>
         </div>
     );
@@ -96,9 +89,9 @@ const Inventory = (props) => {
     const itemTiles = props.items.map((item) => {
         return (
             <div className="container itemList">
-                <div key={item.name} className="inventoryItem row justify-content-center text-center">
-                    <h4 className="itemName col-lg-4 col-md-5 col-sm-6 col-6">Name: {item.name}</h4>
-                    <h4 className="itemValue col-lg-4 col-md-5 col-sm-6 col-6">Value: {item.value}</h4>            
+                <div key={item.name} className="inventoryItem row justify-content-center">
+                    <h4 className="itemName col-lg-4 col-md-5 col-sm-6 col-6 text-left">Name: {item.name}</h4>
+                    <h4 className="itemValue col-lg-4 col-md-5 col-sm-6 col-6 text-right">Value: {item.value}</h4>            
                 </div>
             </div>
         );
@@ -119,8 +112,50 @@ const loadInventoryFromServer = () => {
     });
 };
 
+// check to see if items are in inventory - remove them if so
+const checkInventory = (treasArray) => {
+    sendAjax('GET', '/getTreasure', null, (data) => {
+        // get the name key values for both data sets to compare
+        const getDataNames = (collection) => {
+            const names = [];
+            for (let i = 0; i < collection.length; i++){
+                names.push(collection[i].name);
+            }
+            return names;
+        };
+
+        const serverNames = getDataNames(data.treasure);
+        const clientNames = getDataNames(treasArray);
+
+        // see which collection is smaller and loop through it
+        if(data.treasure.length < treasArray.length){
+            for(let i = 0; i < data.treasure.length; i++){
+                if(serverNames.includes(clientNames[i])){
+                    treasArray[clientNames.indexOf(clientNames[i])] = '';
+                }
+            }
+
+            return treasArray;
+        }
+        for(let i = 0; i < treasArray.length; i++){
+            if(serverNames.includes(clientNames[i])){
+                treasArray[clientNames.indexOf(clientNames[i])] = '';
+            }
+        }
+        return treasArray;
+    });
+}
+
 const setup = (csrfToken) => {
-    ReactDOM.render(<Grid csrf={csrfToken} />, document.querySelector('#app'));
+    // Contains the names of treasure in a given grid tile. Hardcoded for now
+    const treasArray = [
+        {name:'Holy Grail', value:1000}, '', '',
+        '', '', {name:'Gold Ore', value:50},
+        '', {name:'Dagger of Time', value:500}, '',
+    ];
+    checkInventory(treasArray);
+
+    ReactDOM.render(<Grid csrf={csrfToken} treasArray={treasArray} />, document.querySelector('#app'));
     ReactDOM.render(<Inventory items={[]} />, document.querySelector("#inventory"));
     
     loadInventoryFromServer();

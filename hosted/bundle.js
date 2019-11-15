@@ -77,9 +77,6 @@ var GridTile = function (_React$Component) {
 // The chance of treasure is procedurally generated in an array with corresponding indicies
 // for each tile on the grid. Default value is passed into the props of each tile
 var Grid = function Grid(props) {
-    // Contains the names of treasure in a given grid tile. Hardcoded for now
-    // Issues - refreshing the page adds these back in. Need to pull in from server?
-    var treasArray = [{ name: 'Holy Grail', value: 1000 }, '', '', '', '', { name: 'Gold Ore', value: 50 }, '', { name: 'Dagger of Time', value: 500 }, ''];
 
     return React.createElement(
         'div',
@@ -87,23 +84,23 @@ var Grid = function Grid(props) {
         React.createElement(
             'div',
             { className: 'row content-justify-center' },
-            React.createElement(GridTile, { treasure: treasArray[0], csrf: props.csrf }),
-            React.createElement(GridTile, { treasure: treasArray[1], csrf: props.csrf }),
-            React.createElement(GridTile, { treasure: treasArray[2], csrf: props.csrf })
+            React.createElement(GridTile, { treasure: props.treasArray[0], csrf: props.csrf }),
+            React.createElement(GridTile, { treasure: props.treasArray[1], csrf: props.csrf }),
+            React.createElement(GridTile, { treasure: props.treasArray[2], csrf: props.csrf })
         ),
         React.createElement(
             'div',
             { className: 'row content-justify-center' },
-            React.createElement(GridTile, { treasure: treasArray[3], csrf: props.csrf }),
-            React.createElement(GridTile, { treasure: treasArray[4], csrf: props.csrf }),
-            React.createElement(GridTile, { treasure: treasArray[5], csrf: props.csrf })
+            React.createElement(GridTile, { treasure: props.treasArray[3], csrf: props.csrf }),
+            React.createElement(GridTile, { treasure: props.treasArray[4], csrf: props.csrf }),
+            React.createElement(GridTile, { treasure: props.treasArray[5], csrf: props.csrf })
         ),
         React.createElement(
             'div',
             { className: 'row content-justify-center' },
-            React.createElement(GridTile, { treasure: treasArray[6], csrf: props.csrf }),
-            React.createElement(GridTile, { treasure: treasArray[7], csrf: props.csrf }),
-            React.createElement(GridTile, { treasure: treasArray[8], csrf: props.csrf })
+            React.createElement(GridTile, { treasure: props.treasArray[6], csrf: props.csrf }),
+            React.createElement(GridTile, { treasure: props.treasArray[7], csrf: props.csrf }),
+            React.createElement(GridTile, { treasure: props.treasArray[8], csrf: props.csrf })
         )
     );
 };
@@ -127,16 +124,16 @@ var Inventory = function Inventory(props) {
             { className: 'container itemList' },
             React.createElement(
                 'div',
-                { key: item.name, className: 'inventoryItem row justify-content-center text-center' },
+                { key: item.name, className: 'inventoryItem row justify-content-center' },
                 React.createElement(
                     'h4',
-                    { className: 'itemName col-lg-4 col-md-5 col-sm-6 col-6' },
+                    { className: 'itemName col-lg-4 col-md-5 col-sm-6 col-6 text-left' },
                     'Name: ',
                     item.name
                 ),
                 React.createElement(
                     'h4',
-                    { className: 'itemValue col-lg-4 col-md-5 col-sm-6 col-6' },
+                    { className: 'itemValue col-lg-4 col-md-5 col-sm-6 col-6 text-right' },
                     'Value: ',
                     item.value
                 )
@@ -157,8 +154,46 @@ var loadInventoryFromServer = function loadInventoryFromServer() {
     });
 };
 
+// check to see if items are in inventory - remove them if so
+var checkInventory = function checkInventory(treasArray) {
+    sendAjax('GET', '/getTreasure', null, function (data) {
+        // get the name key values for both data sets to compare
+        var getDataNames = function getDataNames(collection) {
+            var names = [];
+            for (var i = 0; i < collection.length; i++) {
+                names.push(collection[i].name);
+            }
+            return names;
+        };
+
+        var serverNames = getDataNames(data.treasure);
+        var clientNames = getDataNames(treasArray);
+
+        // see which collection is smaller and loop through it
+        if (data.treasure.length < treasArray.length) {
+            for (var i = 0; i < data.treasure.length; i++) {
+                if (serverNames.includes(clientNames[i])) {
+                    treasArray[clientNames.indexOf(clientNames[i])] = '';
+                }
+            }
+
+            return treasArray;
+        }
+        for (var _i = 0; _i < treasArray.length; _i++) {
+            if (serverNames.includes(clientNames[_i])) {
+                treasArray[clientNames.indexOf(clientNames[_i])] = '';
+            }
+        }
+        return treasArray;
+    });
+};
+
 var setup = function setup(csrfToken) {
-    ReactDOM.render(React.createElement(Grid, { csrf: csrfToken }), document.querySelector('#app'));
+    // Contains the names of treasure in a given grid tile. Hardcoded for now
+    var treasArray = [{ name: 'Holy Grail', value: 1000 }, '', '', '', '', { name: 'Gold Ore', value: 50 }, '', { name: 'Dagger of Time', value: 500 }, ''];
+    checkInventory(treasArray);
+
+    ReactDOM.render(React.createElement(Grid, { csrf: csrfToken, treasArray: treasArray }), document.querySelector('#app'));
     ReactDOM.render(React.createElement(Inventory, { items: [] }), document.querySelector("#inventory"));
 
     loadInventoryFromServer();

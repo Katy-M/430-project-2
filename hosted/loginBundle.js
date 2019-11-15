@@ -45,7 +45,7 @@ var LoginWindow = function LoginWindow(props) {
                 { htmlFor: "username" },
                 "Username: "
             ),
-            React.createElement("input", { id: "user", className: "form-control", type: "text", name: "username", placeholder: "username" })
+            React.createElement("input", { id: "user", className: "form-control", type: "text", name: "username", placeholder: "Username" })
         ),
         React.createElement(
             "div",
@@ -55,7 +55,7 @@ var LoginWindow = function LoginWindow(props) {
                 { htmlFor: "pass" },
                 "Password: "
             ),
-            React.createElement("input", { id: "pass", className: "form-control", type: "password", name: "pass", placeholder: "password" })
+            React.createElement("input", { id: "pass", className: "form-control", type: "password", name: "pass", placeholder: "Password" })
         ),
         React.createElement(
             "div",
@@ -84,7 +84,7 @@ var SignupWindow = function SignupWindow(props) {
                 { htmlFor: "username" },
                 "Username: "
             ),
-            React.createElement("input", { id: "user", className: "form-control", type: "text", name: "username", placeholder: "username" })
+            React.createElement("input", { id: "user", className: "form-control", type: "text", name: "username", placeholder: "Username" })
         ),
         React.createElement(
             "div",
@@ -94,17 +94,12 @@ var SignupWindow = function SignupWindow(props) {
                 { htmlFor: "pass" },
                 "Password: "
             ),
-            React.createElement("input", { id: "pass", className: "form-control", type: "password", name: "pass", placeholder: "password" })
+            React.createElement("input", { id: "pass", className: "form-control", type: "password", name: "pass", placeholder: "Password" })
         ),
         React.createElement(
             "div",
             { className: "form-group container" },
-            React.createElement(
-                "label",
-                { htmlFor: "pass2" },
-                "Password: "
-            ),
-            React.createElement("input", { id: "pass2", className: "form-control", type: "password", name: "pass2", placeholder: "retype password" })
+            React.createElement("input", { id: "pass2", className: "form-control", type: "password", name: "pass2", placeholder: "Retype password" })
         ),
         React.createElement(
             "div",
@@ -115,12 +110,39 @@ var SignupWindow = function SignupWindow(props) {
     );
 };
 
+var Title = function Title(props) {
+    return React.createElement(
+        "div",
+        null,
+        React.createElement(
+            "h1",
+            { className: "text-center" },
+            "Welcome to Treasure Snatcher!"
+        ),
+        React.createElement(
+            "h2",
+            { className: "text-center" },
+            props.text
+        )
+    );
+};
+
 var createLoginWindow = function createLoginWindow(csrf) {
-    ReactDOM.render(React.createElement(LoginWindow, { csrf: csrf }), document.querySelector("#content"));
+    ReactDOM.render(React.createElement(
+        "div",
+        null,
+        React.createElement(Title, { text: "Login" }),
+        React.createElement(LoginWindow, { csrf: csrf })
+    ), document.querySelector("#content"));
 };
 
 var createSignupWindow = function createSignupWindow(csrf) {
-    ReactDOM.render(React.createElement(SignupWindow, { csrf: csrf }), document.querySelector("#content"));
+    ReactDOM.render(React.createElement(
+        "div",
+        null,
+        React.createElement(Title, { text: "Sign Up" }),
+        React.createElement(SignupWindow, { csrf: csrf })
+    ), document.querySelector("#content"));
 };
 
 var setup = function setup(csrf) {
