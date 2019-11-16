@@ -27,6 +27,19 @@ var handleSignup = function handleSignup(e) {
     return false;
 };
 
+var handlePasswordChange = function handlePasswordChange(e) {
+    e.preventDefault();
+
+    if ($("#user").val() == '' || $("#pass").val == '' || $("#pass2").val() == '') {
+        alert("All fields are required.");
+        return false;
+    }
+
+    sendAjax('POST', $("#changePassword").attr("action"), $("#changePassword").serialize(), redirect);
+
+    return false;
+};
+
 var LoginWindow = function LoginWindow(props) {
     return React.createElement(
         "form",
@@ -110,6 +123,50 @@ var SignupWindow = function SignupWindow(props) {
     );
 };
 
+var ChangePasswordWindow = function ChangePasswordWindow(props) {
+    return React.createElement(
+        "form",
+        { id: "changePassword",
+            name: "changePassword",
+            onSubmit: handlePasswordChange,
+            action: "/changePassword",
+            method: "POST",
+            className: "mainForm"
+        },
+        React.createElement(
+            "div",
+            { className: "form-group container" },
+            React.createElement(
+                "label",
+                { htmlFor: "username" },
+                "Username: "
+            ),
+            React.createElement("input", { id: "user", className: "form-control", type: "text", name: "username", placeholder: "Username" })
+        ),
+        React.createElement(
+            "div",
+            { className: "form-group container" },
+            React.createElement(
+                "label",
+                { htmlFor: "pass" },
+                "Password: "
+            ),
+            React.createElement("input", { id: "pass", className: "form-control", type: "password", name: "pass", placeholder: "New password" })
+        ),
+        React.createElement(
+            "div",
+            { className: "form-group container" },
+            React.createElement("input", { id: "pass2", className: "form-control", type: "password", name: "pass2", placeholder: "Retype new password" })
+        ),
+        React.createElement(
+            "div",
+            { className: "form-group container" },
+            React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+            React.createElement("input", { className: "formSubmit btn btn-primary", type: "submit", value: "Confirm" })
+        )
+    );
+};
+
 var Title = function Title(props) {
     return React.createElement(
         "div",
@@ -145,9 +202,20 @@ var createSignupWindow = function createSignupWindow(csrf) {
     ), document.querySelector("#content"));
 };
 
+// Big dumb - make this require user to be logged in or add two-factor auth
+var createChangePasswordWindow = function createChangePasswordWindow(csrf) {
+    ReactDOM.render(React.createElement(
+        "div",
+        null,
+        React.createElement(Title, { text: "Change Password" }),
+        React.createElement(ChangePasswordWindow, { csrf: csrf })
+    ), document.querySelector("#content"));
+};
+
 var setup = function setup(csrf) {
     var loginButton = document.querySelector("#loginButton");
     var signupButton = document.querySelector("#signupButton");
+    var changePasswordButton = document.querySelector("#changePasswordButton");
 
     signupButton.addEventListener("click", function (e) {
         e.preventDefault();
@@ -158,6 +226,12 @@ var setup = function setup(csrf) {
     loginButton.addEventListener("click", function (e) {
         e.preventDefault();
         createLoginWindow(csrf);
+        return false;
+    });
+
+    changePasswordButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        createChangePasswordWindow(csrf);
         return false;
     });
 

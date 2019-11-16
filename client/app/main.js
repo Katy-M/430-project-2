@@ -124,31 +124,32 @@ const checkInventory = (treasArray) => {
             return names;
         };
 
-        const serverNames = getDataNames(data.treasure);
+        const serverNames = getDataNames(data.treasure).sort();
         const clientNames = getDataNames(treasArray);
 
         // see which collection is smaller and loop through it
-        if(data.treasure.length < treasArray.length){
+        if(data.treasure.length <= treasArray.length){
             for(let i = 0; i < data.treasure.length; i++){
+                if(serverNames.includes(clientNames[i])){
+                    console.log(clientNames.indexOf(serverNames[i]));
+                    treasArray[clientNames.indexOf(serverNames[i])] = '';
+                }
+            }
+        } else {
+            for(let i = 0; i < treasArray.length; i++){
                 if(serverNames.includes(clientNames[i])){
                     treasArray[clientNames.indexOf(clientNames[i])] = '';
                 }
             }
+        }
 
-            return treasArray;
-        }
-        for(let i = 0; i < treasArray.length; i++){
-            if(serverNames.includes(clientNames[i])){
-                treasArray[clientNames.indexOf(clientNames[i])] = '';
-            }
-        }
-        return treasArray;
+        console.log(treasArray);
     });
 }
 
 const setup = (csrfToken) => {
     // Contains the names of treasure in a given grid tile. Hardcoded for now
-    const treasArray = [
+    let treasArray = [
         {name:'Holy Grail', value:1000}, '', '',
         '', '', {name:'Gold Ore', value:50},
         '', {name:'Dagger of Time', value:500}, '',

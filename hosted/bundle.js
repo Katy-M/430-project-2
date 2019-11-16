@@ -166,25 +166,26 @@ var checkInventory = function checkInventory(treasArray) {
             return names;
         };
 
-        var serverNames = getDataNames(data.treasure);
+        var serverNames = getDataNames(data.treasure).sort();
         var clientNames = getDataNames(treasArray);
 
         // see which collection is smaller and loop through it
-        if (data.treasure.length < treasArray.length) {
+        if (data.treasure.length <= treasArray.length) {
             for (var i = 0; i < data.treasure.length; i++) {
                 if (serverNames.includes(clientNames[i])) {
-                    treasArray[clientNames.indexOf(clientNames[i])] = '';
+                    console.log(clientNames.indexOf(serverNames[i]));
+                    treasArray[clientNames.indexOf(serverNames[i])] = '';
                 }
             }
-
-            return treasArray;
-        }
-        for (var _i = 0; _i < treasArray.length; _i++) {
-            if (serverNames.includes(clientNames[_i])) {
-                treasArray[clientNames.indexOf(clientNames[_i])] = '';
+        } else {
+            for (var _i = 0; _i < treasArray.length; _i++) {
+                if (serverNames.includes(clientNames[_i])) {
+                    treasArray[clientNames.indexOf(clientNames[_i])] = '';
+                }
             }
         }
-        return treasArray;
+
+        console.log(treasArray);
     });
 };
 
