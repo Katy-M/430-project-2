@@ -49,6 +49,7 @@ var GridTile = function (_React$Component) {
                 value: this.state.hasTreasure.value
             }, alert(this.state.hasTreasure.name + ' found and added to inventory!'));
 
+            loadInventoryFromServer();
             // remove treasure from the grid tile
             this.setState({ hasTreasure: '' });
             return false;
@@ -74,10 +75,8 @@ var GridTile = function (_React$Component) {
 ;
 
 // A traversable collection of grid tiles
-// The chance of treasure is procedurally generated in an array with corresponding indicies
 // for each tile on the grid. Default value is passed into the props of each tile
 var Grid = function Grid(props) {
-
     return React.createElement(
         'div',
         { className: 'gridContainer container' },
@@ -140,7 +139,6 @@ var Inventory = function Inventory(props) {
             )
         );
     });
-
     return React.createElement(
         'div',
         { className: 'itemList' },
@@ -171,40 +169,48 @@ var checkInventory = function checkInventory(treasArray, csrfToken) {
 
         for (var i = 0; i < treasArray.length; i++) {
             if (serverNames.includes(clientNames[i])) {
-                console.log(clientNames.indexOf(clientNames[i]));
                 treasArray[clientNames.indexOf(clientNames[i])] = '';
             }
         }
 
-        console.log(treasArray);
-        ReactDOM.render(React.createElement(Grid, { csrf: csrfToken, treasArray: treasArray }), document.querySelector('#app'));
-        ReactDOM.render(React.createElement(Inventory, { items: [] }), document.querySelector("#inventory"));
-
-        loadInventoryFromServer();
+        render(csrfToken, treasArray);
     });
 };
 
-var setup = function setup(csrfToken) {
-    // Contains the names of treasure in a given grid tile. Hardcoded for now
-    var treasArray = [{ name: 'Holy Grail', value: 1000 }, '', '', '', '', { name: 'Gold Ore', value: 50 }, '', { name: 'Dagger of Time', value: 500 }, ''];
-    checkInventory(treasArray, csrfToken);
+// render the react components
+var render = function render(csrfToken, treasArray) {
+    ReactDOM.render(React.createElement(Grid, { csrf: csrfToken, treasArray: treasArray }), document.querySelector('#app'));
+    ReactDOM.render(React.createElement(Inventory, { items: [] }), document.querySelector("#inventory"));
 
-    /*ReactDOM.render(<Grid csrf={csrfToken} treasArray={treasArray} />, document.querySelector('#app'));
-    ReactDOM.render(<Inventory items={[]} />, document.querySelector("#inventory"));
-    
-    loadInventoryFromServer(); */
+    loadInventoryFromServer();
+};
+
+// The chance of treasure is procedurally generated in an array with corresponding indicies
+var generateTreasure = function generateTreasure(csrfToken) {
+    // Contains the names of treasure in a given grid tile
+    var treasArray = ['', '', '', '', '', '', '', '', ''];
+
+    // get random treasures and put them on the grid
+    for (var i = 0; i < getNumTreasures(); i++) {
+        var index = getRandomInt(8);
+        console.log(treasArray[index]);
+        if (treasArray[index] == '') {
+            treasArray[index] = getRandomTreasure();
+        }
+    }
+    checkInventory(treasArray, csrfToken);
 };
 
 var getToken = function getToken() {
     sendAjax('GET', '/getToken', null, function (result) {
-        setup(result.csrfToken);
+        generateTreasure(result.csrfToken);
     });
 };
 
 $(document).ready(function () {
     getToken();
 });
-"use strict";
+'use strict';
 
 var redirect = function redirect(response) {
     window.location = response.redirect;
@@ -223,4 +229,40 @@ var sendAjax = function sendAjax(type, action, data, success) {
             alert(messageObj.error);
         }
     });
+};
+
+var getRandomInt = function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+};
+
+var getNumTreasures = function getNumTreasures() {
+    var num = getRandomInt(7);
+    if (num === 0) num = 1;
+    return num;
+};
+
+var getRandomTreasure = function getRandomTreasure() {
+    // 4 types of treasure
+    var id = getRandomInt(5);
+    var treasure = '';
+    switch (id) {
+        case 0:
+            treasure = { name: 'Silver Platter', value: '500' };
+            break;
+        case 1:
+            treasure = { name: 'Gold Coins', value: '50' };
+            break;
+        case 2:
+            treasure = { name: 'Eye of Newt', value: '200' };
+            break;
+        case 3:
+            treasure = { name: 'Serpent Tail', value: '830' };
+            break;
+        case 4:
+            treasure = { name: 'Iron Sword', value: '25' };
+            break;
+        default:
+            treasure = { name: 'undefined', value: '0' };
+    }
+    return treasure;
 };

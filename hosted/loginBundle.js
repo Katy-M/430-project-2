@@ -247,7 +247,7 @@ var getToken = function getToken() {
 $(document).ready(function () {
     getToken();
 });
-"use strict";
+'use strict';
 
 var redirect = function redirect(response) {
     window.location = response.redirect;
@@ -266,4 +266,37 @@ var sendAjax = function sendAjax(type, action, data, success) {
             alert(messageObj.error);
         }
     });
+};
+
+var getRandomInt = function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+};
+
+var getNumTreasures = function getNumTreasures() {
+    var num = getRandomInt(5);
+    if (num === 0) num = 1;
+    return num;
+};
+
+var getRandomTreasure = function getRandomTreasure() {
+    // 4 types of treasure
+    var id = getRandomInt(4);
+    var treasure = '';
+    switch (id) {
+        case 0:
+            treasure = { name: 'Silver Platter', value: '500' };
+            break;
+        case 1:
+            treasure = { name: 'Gold Coins', value: '50' };
+            break;
+        case 2:
+            treasure = { name: 'Eye of Newt', value: '200' };
+            break;
+        case 3:
+            treasure = { name: 'Serpent Tail', value: '830' };
+            break;
+        default:
+            treasure = '';
+    }
+    return treasure;
 };

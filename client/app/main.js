@@ -34,7 +34,8 @@ class GridTile extends React.Component {
             },
             alert(`${this.state.hasTreasure.name} found and added to inventory!`)
         );
-
+        
+        loadInventoryFromServer();
         // remove treasure from the grid tile
         this.setState({hasTreasure: ''});
         return false;
@@ -50,10 +51,8 @@ class GridTile extends React.Component {
 };
 
 // A traversable collection of grid tiles
-// The chance of treasure is procedurally generated in an array with corresponding indicies
 // for each tile on the grid. Default value is passed into the props of each tile
 const Grid = (props) => {
-
     return(
         <div className="gridContainer container">
             <div className="row content-justify-center">
@@ -96,7 +95,6 @@ const Inventory = (props) => {
             </div>
         );
     });
-
     return (
         <div className="itemList">
             {itemTiles}
@@ -107,7 +105,7 @@ const Inventory = (props) => {
 const loadInventoryFromServer = () => {
     sendAjax('GET', '/getTreasure', null, (data) => {
         ReactDOM.render(
-            <Inventory items={data.treasure} />, document.querySelector("#inventory")
+            <Inventory items={data.treasure}/>, document.querySelector("#inventory")
         );
     });
 };
@@ -129,37 +127,41 @@ const checkInventory = (treasArray, csrfToken) => {
 
         for(let i = 0; i < treasArray.length; i++){
             if(serverNames.includes(clientNames[i])){
-                console.log(clientNames.indexOf(clientNames[i]));
                 treasArray[clientNames.indexOf(clientNames[i])] = '';
             }
         }
 
-        console.log(treasArray);
-        ReactDOM.render(<Grid csrf={csrfToken} treasArray={treasArray} />, document.querySelector('#app'));
-        ReactDOM.render(<Inventory items={[]} />, document.querySelector("#inventory"));
-        
-        loadInventoryFromServer();
+        render(csrfToken, treasArray);
     });
-}
+};
 
-const setup = (csrfToken) => {
-    // Contains the names of treasure in a given grid tile. Hardcoded for now
-    let treasArray = [
-        {name:'Holy Grail', value:1000}, '', '',
-        '', '', {name:'Gold Ore', value:50},
-        '', {name:'Dagger of Time', value:500}, '',
-    ];
-    checkInventory(treasArray, csrfToken)
-
-    /*ReactDOM.render(<Grid csrf={csrfToken} treasArray={treasArray} />, document.querySelector('#app'));
-    ReactDOM.render(<Inventory items={[]} />, document.querySelector("#inventory"));
+// render the react components
+const render = (csrfToken, treasArray) => {
+    ReactDOM.render(<Grid csrf={csrfToken} treasArray={treasArray} />, document.querySelector('#app'));
+    ReactDOM.render(<Inventory items={[]}/>, document.querySelector("#inventory"));
     
-    loadInventoryFromServer(); */
+    loadInventoryFromServer();
+};
+
+// The chance of treasure is procedurally generated in an array with corresponding indicies
+const generateTreasure = (csrfToken) => {
+    // Contains the names of treasure in a given grid tile
+    let treasArray = ['', '', '', '', '', '', '', '', '',];
+
+    // get random treasures and put them on the grid
+    for(let i = 0; i < getNumTreasures(); i++){
+        const index = getRandomInt(8);
+        console.log(treasArray[index]);
+        if(treasArray[index] == ''){
+            treasArray[index] = getRandomTreasure();
+        }
+    }
+    checkInventory(treasArray, csrfToken)
 };
 
 const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {
-        setup(result.csrfToken);
+        generateTreasure(result.csrfToken);
     });
 };
 
