@@ -92,14 +92,14 @@ const changePassword = (request, response) => {
   }
 
   // https://stackoverflow.com/questions/17828663/passport-local-mongoose-change-password
-  return Account.AccountModel.authenticate(req.body.username, req.body.pass,  (err, account) => {
+  return Account.AccountModel.authenticate(req.body.username, req.body.pass, (err, account) => {
     if (!account) {
       return res.status(500).json({ error: 'Account does not exist.' });
     }
     if (req.body.pass2 === req.body.pass) {
       return res.status(400).json({ error: 'Password cannot match old password.' });
     }
-  
+
     return Account.AccountModel.generateHash(req.body.pass2, (salt, hash) => {
       Account.AccountModel.updateOne(
         { username: account.username },
