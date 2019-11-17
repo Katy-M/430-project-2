@@ -112,11 +112,11 @@ const ChangePasswordWindow = (props) => {
 
             <div className="form-group container">
                 <label htmlFor="pass">Password: </label>
-                <input id="pass" className="form-control" type="password" name="pass" placeholder="New password"/>
+                <input id="pass" className="form-control" type="password" name="pass" placeholder="Old password"/>
             </div>
 
             <div className="form-group container">
-                <input id="pass2" className="form-control" type="password" name="pass2" placeholder="Retype new password"/>
+                <input id="pass2" className="form-control" type="password" name="pass2" placeholder="New password"/>
             </div>
 
             <div className="form-group container">

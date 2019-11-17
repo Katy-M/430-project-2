@@ -78,8 +78,37 @@ const signup = (request, response) => {
   });
 };
 
-const changePassword = () => {
-  console.log('change password request');
+const changePassword = (request, response) => {
+  const req = request;
+  const res = response;
+
+    // cast to strings
+  req.body.username = `${req.body.username}`;
+  req.body.pass = `${req.body.pass}`;
+  req.body.pass2 = `${req.body.pass2}`;
+
+  if (!req.body.username || !req.body.pass || !req.body.pass2) {
+    return res.status(400).json({ error: 'All fields are required.' });
+  }
+
+  // https://stackoverflow.com/questions/17828663/passport-local-mongoose-change-password
+  return Account.AccountModel.authenticate(req.body.username, req.body.pass,  (err, account) => {
+    if (!account) {
+      return res.status(500).json({ error: 'Account does not exist.' });
+    }
+    if (req.body.pass2 === req.body.pass) {
+      return res.status(400).json({ error: 'Password cannot match old password.' });
+    }
+  
+    return Account.AccountModel.generateHash(req.body.pass2, (salt, hash) => {
+      Account.AccountModel.updateOne(
+        { username: account.username },
+        { salt, password: hash }, (error) => {
+          if (err) return res.status(400).json({ error });
+          return res.json({ redirect: 'login' });
+        });
+    });
+  });
 };
 
 const getToken = (request, response) => {

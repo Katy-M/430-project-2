@@ -151,12 +151,12 @@ var ChangePasswordWindow = function ChangePasswordWindow(props) {
                 { htmlFor: "pass" },
                 "Password: "
             ),
-            React.createElement("input", { id: "pass", className: "form-control", type: "password", name: "pass", placeholder: "New password" })
+            React.createElement("input", { id: "pass", className: "form-control", type: "password", name: "pass", placeholder: "Old password" })
         ),
         React.createElement(
             "div",
             { className: "form-group container" },
-            React.createElement("input", { id: "pass2", className: "form-control", type: "password", name: "pass2", placeholder: "Retype new password" })
+            React.createElement("input", { id: "pass2", className: "form-control", type: "password", name: "pass2", placeholder: "New password" })
         ),
         React.createElement(
             "div",
