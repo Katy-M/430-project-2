@@ -47,9 +47,10 @@ var GridTile = function (_React$Component) {
                 _csrf: this.state._csrf,
                 name: this.state.hasTreasure.name,
                 value: this.state.hasTreasure.value
-            }, alert(this.state.hasTreasure.name + ' found and added to inventory!'));
-
-            loadInventoryFromServer();
+            }, function () {
+                loadInventoryFromServer();
+            });
+            alert(this.state.hasTreasure.name + ' found and added to inventory!');
             // remove treasure from the grid tile
             this.setState({ hasTreasure: '' });
             return false;

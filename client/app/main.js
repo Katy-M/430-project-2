@@ -32,10 +32,11 @@ class GridTile extends React.Component {
                 name: this.state.hasTreasure.name,
                 value: this.state.hasTreasure.value,
             },
-            alert(`${this.state.hasTreasure.name} found and added to inventory!`)
+            ()=> {
+                loadInventoryFromServer();
+            }
         );
-        
-        loadInventoryFromServer();
+        alert(`${this.state.hasTreasure.name} found and added to inventory!`)
         // remove treasure from the grid tile
         this.setState({hasTreasure: ''});
         return false;
