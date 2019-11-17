@@ -12,12 +12,12 @@ const router = (app) => {
   app.post('/makeTreasure', mid.requiresLogin, controllers.Treasure.makeTreasure);
   app.get('/getTreasure', mid.requiresLogin, controllers.Treasure.getTreasure);
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
-  /* app.post(
+  app.post(
     '/changePassword',
     mid.requiresSecure,
     mid.requiresLogout,
-    controllers.Account.changePassword);
-*/
+    controllers.Account.changePassword
+    );
 };
 
 module.exports = router;

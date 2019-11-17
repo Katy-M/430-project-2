@@ -113,7 +113,7 @@ const loadInventoryFromServer = () => {
 };
 
 // check to see if items are in inventory - remove them if so
-const checkInventory = (treasArray) => {
+const checkInventory = (treasArray, csrfToken) => {
     sendAjax('GET', '/getTreasure', null, (data) => {
         // get the name key values for both data sets to compare
         const getDataNames = (collection) => {
@@ -124,26 +124,21 @@ const checkInventory = (treasArray) => {
             return names;
         };
 
-        const serverNames = getDataNames(data.treasure).sort();
+        const serverNames = getDataNames(data.treasure);
         const clientNames = getDataNames(treasArray);
 
-        // see which collection is smaller and loop through it
-        if(data.treasure.length <= treasArray.length){
-            for(let i = 0; i < data.treasure.length; i++){
-                if(serverNames.includes(clientNames[i])){
-                    console.log(clientNames.indexOf(serverNames[i]));
-                    treasArray[clientNames.indexOf(serverNames[i])] = '';
-                }
-            }
-        } else {
-            for(let i = 0; i < treasArray.length; i++){
-                if(serverNames.includes(clientNames[i])){
-                    treasArray[clientNames.indexOf(clientNames[i])] = '';
-                }
+        for(let i = 0; i < treasArray.length; i++){
+            if(serverNames.includes(clientNames[i])){
+                console.log(clientNames.indexOf(clientNames[i]));
+                treasArray[clientNames.indexOf(clientNames[i])] = '';
             }
         }
 
         console.log(treasArray);
+        ReactDOM.render(<Grid csrf={csrfToken} treasArray={treasArray} />, document.querySelector('#app'));
+        ReactDOM.render(<Inventory items={[]} />, document.querySelector("#inventory"));
+        
+        loadInventoryFromServer();
     });
 }
 
@@ -154,12 +149,12 @@ const setup = (csrfToken) => {
         '', '', {name:'Gold Ore', value:50},
         '', {name:'Dagger of Time', value:500}, '',
     ];
-    checkInventory(treasArray);
+    checkInventory(treasArray, csrfToken)
 
-    ReactDOM.render(<Grid csrf={csrfToken} treasArray={treasArray} />, document.querySelector('#app'));
+    /*ReactDOM.render(<Grid csrf={csrfToken} treasArray={treasArray} />, document.querySelector('#app'));
     ReactDOM.render(<Inventory items={[]} />, document.querySelector("#inventory"));
     
-    loadInventoryFromServer();
+    loadInventoryFromServer(); */
 };
 
 const getToken = () => {

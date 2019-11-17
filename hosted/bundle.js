@@ -155,7 +155,7 @@ var loadInventoryFromServer = function loadInventoryFromServer() {
 };
 
 // check to see if items are in inventory - remove them if so
-var checkInventory = function checkInventory(treasArray) {
+var checkInventory = function checkInventory(treasArray, csrfToken) {
     sendAjax('GET', '/getTreasure', null, function (data) {
         // get the name key values for both data sets to compare
         var getDataNames = function getDataNames(collection) {
@@ -166,38 +166,33 @@ var checkInventory = function checkInventory(treasArray) {
             return names;
         };
 
-        var serverNames = getDataNames(data.treasure).sort();
+        var serverNames = getDataNames(data.treasure);
         var clientNames = getDataNames(treasArray);
 
-        // see which collection is smaller and loop through it
-        if (data.treasure.length <= treasArray.length) {
-            for (var i = 0; i < data.treasure.length; i++) {
-                if (serverNames.includes(clientNames[i])) {
-                    console.log(clientNames.indexOf(serverNames[i]));
-                    treasArray[clientNames.indexOf(serverNames[i])] = '';
-                }
-            }
-        } else {
-            for (var _i = 0; _i < treasArray.length; _i++) {
-                if (serverNames.includes(clientNames[_i])) {
-                    treasArray[clientNames.indexOf(clientNames[_i])] = '';
-                }
+        for (var i = 0; i < treasArray.length; i++) {
+            if (serverNames.includes(clientNames[i])) {
+                console.log(clientNames.indexOf(clientNames[i]));
+                treasArray[clientNames.indexOf(clientNames[i])] = '';
             }
         }
 
         console.log(treasArray);
+        ReactDOM.render(React.createElement(Grid, { csrf: csrfToken, treasArray: treasArray }), document.querySelector('#app'));
+        ReactDOM.render(React.createElement(Inventory, { items: [] }), document.querySelector("#inventory"));
+
+        loadInventoryFromServer();
     });
 };
 
 var setup = function setup(csrfToken) {
     // Contains the names of treasure in a given grid tile. Hardcoded for now
     var treasArray = [{ name: 'Holy Grail', value: 1000 }, '', '', '', '', { name: 'Gold Ore', value: 50 }, '', { name: 'Dagger of Time', value: 500 }, ''];
-    checkInventory(treasArray);
+    checkInventory(treasArray, csrfToken);
 
-    ReactDOM.render(React.createElement(Grid, { csrf: csrfToken, treasArray: treasArray }), document.querySelector('#app'));
-    ReactDOM.render(React.createElement(Inventory, { items: [] }), document.querySelector("#inventory"));
-
-    loadInventoryFromServer();
+    /*ReactDOM.render(<Grid csrf={csrfToken} treasArray={treasArray} />, document.querySelector('#app'));
+    ReactDOM.render(<Inventory items={[]} />, document.querySelector("#inventory"));
+    
+    loadInventoryFromServer(); */
 };
 
 var getToken = function getToken() {
